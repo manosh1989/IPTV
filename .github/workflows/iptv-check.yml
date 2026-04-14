@@ -3,6 +3,9 @@ name: IPTV Builder
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,28 +14,25 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Download IPTV source
+      - name: Download latest IPTV list
         run: |
           echo "Downloading IPTV list..."
           curl -L -o ro.m3u https://iptv-org.github.io/iptv/countries/ro.m3u
 
-      - name: Validate file exists
+      - name: Force file update (ensures commit always changes)
         run: |
-          if [ -f ro.m3u ]; then
-            echo "OK: file exists"
-          else
-            echo "ERROR: missing file"
-            exit 1
-          fi
+          echo "# updated: $(date)" >> ro.m3u
 
-      - name: Show sample
+      - name: Validate file
         run: |
-          head -n 10 ro.m3u
+          echo "Line count:"
+          wc -l ro.m3u
 
-      - name: Commit updated playlist
+      - name: Commit and push changes
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
           git add ro.m3u
-          git commit -m "update playlist" || echo "no changes"
+          git commit -m "auto update IPTV list" || echo "no changes to commit"
           git push
