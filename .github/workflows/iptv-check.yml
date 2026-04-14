@@ -8,26 +8,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: Download IPTV source
         run: |
-          echo "Downloading latest IPTV list..."
+          echo "Downloading IPTV list..."
           curl -L -o ro.m3u https://iptv-org.github.io/iptv/countries/ro.m3u
 
       - name: Validate file exists
         run: |
-          echo "Checking file..."
           if [ -f ro.m3u ]; then
-            echo "OK: ro.m3u exists"
+            echo "OK: file exists"
           else
-            echo "ERROR: file missing"
+            echo "ERROR: missing file"
             exit 1
           fi
 
-      - name: Show sample channels
+      - name: Show sample
         run: |
-          echo "Sample channels:"
-          grep -E "^#EXTINF|^https?://" ro.m3u | head -n 20
-                - name: Save updated playlist to repo
+          head -n 10 ro.m3u
+
+      - name: Commit updated playlist
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
