@@ -11,9 +11,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Check playlist exists
+      - name: Read playlist
         run: |
-          echo "Checking files..."
-          ls -lah
-          echo "Looking for ro.m3u..."
-          test -f ro.m3u && echo "ro.m3u FOUND" || echo "ro.m3u MISSING"
+          echo "Reading ro.m3u..."
+          head -n 10 ro.m3u
