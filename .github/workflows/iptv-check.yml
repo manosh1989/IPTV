@@ -8,5 +8,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Say hello
-        run: echo "IPTV system is alive"
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Check playlist exists
+        run: |
+          echo "Checking files..."
+          ls -lah
+          echo "Looking for ro.m3u..."
+          test -f ro.m3u && echo "ro.m3u FOUND" || echo "ro.m3u MISSING"
