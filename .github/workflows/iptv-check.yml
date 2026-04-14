@@ -1,1 +1,4 @@
+name: IPTV Checker
 
+on:
+  workflow_dispatch:
